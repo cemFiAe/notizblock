@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="./scripts/templates.js"></script>
+    <script src="./scripts/script.js"></script>
+</head>
+<body onload="init()">
+    <div class="header">
+    <h1 class="h1 header">To-Do-List</h1>
+    </div>
+    
+    <br><br>
+    <div class="main">
+        <div id="notesContainer" class="notesContainer">
+            
+                <input class="input" name="inputTitle" type="text" id="titleInput" placeholder="write your title..." required>
+                <input class="input" name="inputNote" type="text" id="noteInput" placeholder="write your note..." required>
+                <input id="noteButton" onclick="addNote()" class="safe_button" type="submit" value="submit">
+            
+    </div>    
+    <br><br>
+    <div class="trash_icon_container">
+    <img onclick="toggleTrash()" src="./assets/img/recycle-bin.png" alt="trash" class="trash_icon">
+    </div>
+    <div id="content" class="contents">
+    </div>
+    <br>
+    <br><br>
+    <div id="trash_container" class="trash_container d_none">
+        <button onclick="toggleTrash()" class="trash_container_button">close</button>
+        <div id="trash" class="trash_content">
+            <h2>Trash is empty</h2><br><br>
+        </div>
+        
+    </div>
+    </div>
+    
+
+</body>
+</html>
