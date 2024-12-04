@@ -1,4 +1,3 @@
-
 // notizen anzeigen lassen
 
 let notesTitles = [];
@@ -36,6 +35,7 @@ function addNote(){
     }
 
     // Wenn beide Felder ausgefüllt sind, fahre fort
+    
     allNotes.notesTitles.push(title.value.trim()); // trim() entfernt unnötige Leerzeichen
     allNotes.notes.push(note.value.trim());
 
@@ -80,19 +80,6 @@ function moveNote(indexNote, startKey, destinationKey){
     renderTrash();
 }
 
-// function moveToTrash(i){
-//     let trashTitle = allNotes.notesTitles.splice(i, 1);
-//     let trashNote = allNotes.notes.splice(i, 1);
-
-//     allNotes.trashTitles.push(trashTitle[0]);
-//     allNotes.trash.push(trashNote[0]);   
-
-//     saveToLocalStorage();
-//     saveToLocalStorageTrash();
-//     renderNotes();
-//     renderTrash();
-
-// }
 function saveToLocalStorageTrash(){
     let titleAsTextTrash = JSON.stringify(allNotes.trashTitles);
 
@@ -119,8 +106,27 @@ function deleteTrashNote(i){
     renderTrash();
     saveToLocalStorageTrash();
 }
+
+function toggleTrash(){
+    document.getElementById('trash_container').classList.toggle('d_none');
+}
+
+// function moveToTrash(i){
+//     let trashTitle = allNotes.notesTitles.splice(i, 1);
+//     let trashNote = allNotes.notes.splice(i, 1);
+
+//     allNotes.trashTitles.push(trashTitle[0]);
+//     allNotes.trash.push(trashNote[0]);   
+
+//     saveToLocalStorage();
+//     saveToLocalStorageTrash();
+//     renderNotes();
+//     renderTrash();
+
+// }
+
 // function restore(i){
-//     let notesTitle = allNotes.trashTitles.splice(i, 1);
+//     let notesTitle = allNotes.traitlshTes.splice(i, 1);
 //     let note = allNotes.trash.splice(i, 1);
 
 //     allNotes.notesTitles.push(notesTitle[0]);
@@ -131,6 +137,3 @@ function deleteTrashNote(i){
 //     renderNotes();
 //     renderTrash();
 // }
-function toggleTrash(){
-    document.getElementById('trash_container').classList.toggle('d_none');
-}

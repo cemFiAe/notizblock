@@ -18,20 +18,24 @@ function renderTrash(){
 }
 function getNoteTemplates(i){
     return /*html*/`
-        <div class="single_content">
-            <p>title: ${allNotes.notesTitles[i]}</p>
-            <p> ${allNotes.notes[i]}</p>
-            <button onclick="moveNote(${i}, 'notes', 'trash')">move to trash</button>
+        <div class="card">
+            <div class="card-body">
+                <h2>Title: ${allNotes.notesTitles[i]}</h2>
+                <p> ${allNotes.notes[i]}</p>
+                <button onclick="moveNote(${i}, 'notes', 'trash')" type="button" class="btn btn-danger">delete</button>
+            </div>
         </div>
     `
 }
 function getTrashTemplates(i){
     return /*html*/ `
-        <div class="single_content_trash">
-            <p>title: ${allNotes.trashTitles[i]}</p>
+        <div class="card">
+            <div class="card-body single-trash-container">
+            <h2>Title: ${allNotes.trashTitles[i]}</h2>
             <p>${allNotes.trash[i]}</p>
-            <button onclick="deleteTrashNote(${i})">delete</button>
-            <button onclick="moveNote(${i}, 'trash', 'notes')">restore</button>
+            <button onclick="deleteTrashNote(${i})" type="button" class="btn btn-danger trash-button">permanently delete</button>
+            <button onclick="moveNote(${i}, 'trash', 'notes')" type="button" class="btn btn-success trash-button">restore</button>
+            </div>
         </div>
     `
 }
