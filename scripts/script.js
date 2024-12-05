@@ -12,13 +12,14 @@ let allNotes = {
     'trashTitles': [],
     'trash': [],
 }
-
-function init(){
+async function init() {
+    await getNotesFromFile(); // lade notizen vom server
     getFromLocalStorage();
     getFromLocalStorageTrash();
     renderNotes();
     renderTrash();
 }
+
 
 function addNote(){
     let title = document.getElementById('titleInput');
@@ -35,10 +36,11 @@ function addNote(){
     }
 
     // Wenn beide Felder ausgefüllt sind, fahre fort
-    
+
     allNotes.notesTitles.push(title.value.trim()); // trim() entfernt unnötige Leerzeichen
     allNotes.notes.push(note.value.trim());
 
+    saveNotesToFile();
     saveToLocalStorage();
     renderNotes();
 
@@ -47,23 +49,37 @@ function addNote(){
     note.value = '';
 
 }
-function saveToLocalStorage(){
-    let titleAsText = JSON.stringify(allNotes.notesTitles);
+async function saveNotesToFile() {
+    try {
+        const response = await fetch('http://localhost:3000/saveNotes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(allNotes),  
+        });
 
-    let notesAsText =  JSON.stringify(allNotes.notes);
-
-    if(titleAsText && notesAsText){
-        localStorage.setItem('Title:', titleAsText);        
-        localStorage.setItem('Note:', notesAsText);
+        if (!response.ok) {
+            throw new Error('Failed to save notes to file');
+        }
+        console.log('Notes successfully saved to file.');
+    } catch (error) {
+        console.error('Error:', error);
     }
 }
-function getFromLocalStorage(){
-    let titleAsText = localStorage.getItem('Title:');
-    let notesAsText = localStorage.getItem('Note:');
-    
-    if(titleAsText && notesAsText){
-        allNotes.notesTitles = JSON.parse(titleAsText);
-        allNotes.notes = JSON.parse(notesAsText);
+
+async function getNotesFromFile() {
+    try {
+        const response = await fetch('http://localhost:3000/getNotes');
+        if (!response.ok) {
+            throw new Error('Failed to retrieve notes');
+        }
+        const data = await response.json();
+        allNotes = data;
+        renderNotes();
+        renderTrash();
+    } catch (error) {
+        console.error('Error:', error);
     }
 }
 
@@ -74,12 +90,46 @@ function moveNote(indexNote, startKey, destinationKey){
     let notesTitle = allNotes[startKey + "Titles"].splice(indexNote, 1);
     allNotes[destinationKey + "Titles"].push(notesTitle[0]);
 
+    saveNotesToFile();
     saveToLocalStorage();
-    saveToLocalStorageTrash();
+    saveToLocalStorageTrash()
     renderNotes();
     renderTrash();
 }
 
+function deleteTrashNote(i){
+    allNotes.trashTitles.splice(i, 1);
+    allNotes.trash.splice(i, 1);
+
+    renderTrash();
+    saveNotesToFile();
+    saveToLocalStorageTrash();
+}
+
+function toggleTrash(){
+    document.getElementById('trash_container').classList.toggle('d_none');
+}
+
+function saveToLocalStorage(){
+    let titleAsText = JSON.stringify(allNotes.notesTitles);
+
+    let notesAsText =  JSON.stringify(allNotes.notes);
+
+    if(titleAsText && notesAsText){
+        localStorage.setItem('Title:', titleAsText);        
+        localStorage.setItem('Note:', notesAsText);
+    }
+}
+
+function getFromLocalStorage(){
+    let titleAsText = localStorage.getItem('Title:');
+    let notesAsText = localStorage.getItem('Note:');
+    
+    if(titleAsText && notesAsText){
+        allNotes.notesTitles = JSON.parse(titleAsText);
+        allNotes.notes = JSON.parse(notesAsText);
+    }
+}
 function saveToLocalStorageTrash(){
     let titleAsTextTrash = JSON.stringify(allNotes.trashTitles);
 
@@ -90,6 +140,7 @@ function saveToLocalStorageTrash(){
         localStorage.setItem('Note-Trash:', notesAsTextTrash);
     }
 }
+
 function getFromLocalStorageTrash(){
     let titleAsTextTrash = localStorage.getItem('Title-Trash:');
     let notesAsTextTrash = localStorage.getItem('Note-Trash:');
@@ -99,41 +150,3 @@ function getFromLocalStorageTrash(){
         allNotes.trash = JSON.parse(notesAsTextTrash);
     }
 }
-function deleteTrashNote(i){
-    allNotes.trashTitles.splice(i, 1);
-    allNotes.trash.splice(i, 1);
-
-    renderTrash();
-    saveToLocalStorageTrash();
-}
-
-function toggleTrash(){
-    document.getElementById('trash_container').classList.toggle('d_none');
-}
-
-// function moveToTrash(i){
-//     let trashTitle = allNotes.notesTitles.splice(i, 1);
-//     let trashNote = allNotes.notes.splice(i, 1);
-
-//     allNotes.trashTitles.push(trashTitle[0]);
-//     allNotes.trash.push(trashNote[0]);   
-
-//     saveToLocalStorage();
-//     saveToLocalStorageTrash();
-//     renderNotes();
-//     renderTrash();
-
-// }
-
-// function restore(i){
-//     let notesTitle = allNotes.traitlshTes.splice(i, 1);
-//     let note = allNotes.trash.splice(i, 1);
-
-//     allNotes.notesTitles.push(notesTitle[0]);
-//     allNotes.notes.push(note[0]);
-
-//     saveToLocalStorage();
-//     saveToLocalStorageTrash();
-//     renderNotes();
-//     renderTrash();
-// }
