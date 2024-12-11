@@ -1,17 +1,10 @@
-// notizen anzeigen lassen
-
-let notesTitles = [];
-let notes = [];
-
-let trashTitles = [];
-let trash = [];
-
 let allNotes = {
-    'notesTitles': [],
-    'notes': [],
-    'trashTitles': [],
-    'trash': [],
+    notesTitles: [],
+    notes: [],
+    trashTitles: [],
+    trash: [],
 }
+
 async function init() {
     await getNotesFromFile(); // lade notizen vom server
     getFromLocalStorage();
@@ -19,7 +12,6 @@ async function init() {
     renderNotes();
     renderTrash();
 }
-
 
 function addNote(){
     let title = document.getElementById('titleInput');
@@ -47,40 +39,6 @@ function addNote(){
     // Eingabefelder nach dem Hinzufügen leeren
     title.value = '';
     note.value = '';
-
-}
-async function saveNotesToFile() {
-    try {
-        const response = await fetch('http://localhost:3000/saveNotes', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(allNotes),  
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to save notes to file');
-        }
-        console.log('Notes successfully saved to file.');
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-
-async function getNotesFromFile() {
-    try {
-        const response = await fetch('http://localhost:3000/getNotes');
-        if (!response.ok) {
-            throw new Error('Failed to retrieve notes');
-        }
-        const data = await response.json();
-        allNotes = data;
-        renderNotes();
-        renderTrash();
-    } catch (error) {
-        console.error('Error:', error);
-    }
 }
 
 function moveNote(indexNote, startKey, destinationKey){

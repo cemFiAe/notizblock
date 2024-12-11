@@ -1,4 +1,3 @@
-
 function renderNotes(){
     let contentRef = document.getElementById('content');
     contentRef.innerHTML = '';
